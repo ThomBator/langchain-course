@@ -7,7 +7,7 @@ load_dotenv()
 from langchain.agents import create_agent
 from langchain.tools import tool
 from langchain_core.messages import HumanMessage
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_tavily import TavilySearch
 
 
@@ -26,7 +26,8 @@ class AgentResponse(BaseModel):
     )
 
 
-llm = ChatOpenAI(model="gpt-5")
+llm = ChatGoogleGenerativeAI(temperature=0,model="gemini-3.1-flash-lite")
+# must contain at least one tool
 tools = [TavilySearch()]
 agent = create_agent(model=llm, tools=tools, response_format=AgentResponse)
 
@@ -35,9 +36,9 @@ def main():
     print("Hello from langchain-course!")
     result = agent.invoke(
         {
-            "messages": HumanMessage(
+            "messages": [HumanMessage(
                 content="search for 3 job postings for an ai engineer using langchain in the bay area on linkedin and list their details?"
-            )
+            )]
         }
     )
     print(result)
